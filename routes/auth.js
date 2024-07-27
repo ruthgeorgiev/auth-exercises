@@ -7,18 +7,18 @@ const SECRET_KEY = 'f25f0a1af07c2c611a78ffa1d8d70af00c08065f8a6f74720d648200e380
 
 // Connect to MongoDB
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/auth')
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch(err => {
-    console.error('Failed to connect to MongoDB', err);
-  });
+mongoose.connect('mongodb://localhost:27017/auth', {
+  serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('Failed to connect to MongoDB', err);
+});
 
 router.post('/createUser', async (req, res) => {
-  console.log('Request Body:', req.body); // Log entire request body for debugging
   const { username, password } = req.body;
-  console.log('Received:', { username, password }); // Add this line for debugging
+  console.log('Request Body:', req.body);
+  console.log('Received:', { username, password });
   const newUser = new User({ username, password });
   try {
     await newUser.save();
