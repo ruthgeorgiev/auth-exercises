@@ -1,8 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-
 const router = express.Router();
-const SECRET_KEY = 'your_super_secret_key';
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 router.get('/login', (req, res) => {
   res.send('<form method="POST" action="/jwt/connect"><input type="text" name="login" placeholder="login"/><input type="password" name="password" placeholder="password"/><button type="submit">Login</button></form>');

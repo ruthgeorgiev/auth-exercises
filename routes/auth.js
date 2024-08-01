@@ -1,14 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
 const router = express.Router();
-const SECRET_KEY = 'f25f0a1af07c2c611a78ffa1d8d70af00c08065f8a6f74720d648200e3802a774d93c1690b092b679666390f17a8f32adc6143b594a7ed5007181fec51040fcb'; // Replace this with your generated key
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // Connect to MongoDB
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/auth', {
-  serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
@@ -17,14 +19,11 @@ mongoose.connect('mongodb://localhost:27017/auth', {
 
 router.post('/createUser', async (req, res) => {
   const { username, password } = req.body;
-  console.log('Request Body:', req.body);
-  console.log('Received:', { username, password });
   const newUser = new User({ username, password });
   try {
     await newUser.save();
     res.send('User created');
   } catch (error) {
-    console.error('Error creating user:', error);
     res.status(500).send('Error creating user');
   }
 });
@@ -53,23 +52,6 @@ router.post('/checkJWT', (req, res) => {
   } catch (err) {
     res.status(401).send('JWT is not valid');
   }
-});
-
-const authorize = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
-
-// Exercise 5: Authorization Middleware
-router.get('/admin', authorize, (req, res) => {
-  res.send('Welcome to the protected admin page.');
 });
 
 module.exports = router;

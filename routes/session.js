@@ -25,13 +25,10 @@ router.get('/login', (req, res) => {
 
 router.post('/connect', (req, res) => {
   const { login, password } = req.body;
-  console.log(`Login: ${login}, Password: ${password}`);
   if (login === 'john' && password === 'doe') {
     req.session.isConnected = true;
-    console.log('Authentication successful, redirecting to /session/admin');
     res.redirect('/session/admin');
   } else {
-    console.log('Authentication failed, redirecting to /session/login');
     res.redirect('/session/login');
   }
 });
@@ -53,5 +50,6 @@ router.get('/logout', (req, res) => {
     res.redirect('/session/login');
   });
 });
+
 
 module.exports = router;
