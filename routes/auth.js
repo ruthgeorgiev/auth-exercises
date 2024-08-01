@@ -7,15 +7,15 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Connect to MongoDB
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/auth', {
+  serverSelectionTimeoutMS: 5000 // Adjust the timeout as necessary
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
   console.error('Failed to connect to MongoDB', err);
 });
+
 
 router.post('/createUser', async (req, res) => {
   const { username, password } = req.body;

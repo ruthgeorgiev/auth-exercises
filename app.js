@@ -16,8 +16,8 @@ app.use(bodyParser.json());
 app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false,
-  saveUninitialized: false,  // Set this to false to avoid storing unmodified sessions
-  cookie: { secure: false }  // Ensure secure is false for non-HTTPS connections
+  saveUninitialized: false,  
+  cookie: { secure: false }  
 }));
 
 app.use((req, res, next) => {
